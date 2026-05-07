@@ -1,5 +1,7 @@
 package se.jensen.duaa.cloudstore.model;
 
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -8,10 +10,18 @@ public class Product {
 
     @Id
     private Long id;
+
     private String title;
+    private Double price;
     private String description;
-    private double price;
+    private String category;
     private String image;
+
+    @Embedded
+    private Rating rating;
+
+    public Product() {
+    }
 
     public Long getId() {
         return id;
@@ -29,6 +39,14 @@ public class Product {
         this.title = title;
     }
 
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -37,12 +55,12 @@ public class Product {
         this.description = description;
     }
 
-    public double getPrice() {
-        return price;
+    public String getCategory() {
+        return category;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getImage() {
@@ -52,5 +70,34 @@ public class Product {
     public void setImage(String image) {
         this.image = image;
     }
-}
 
+    public Rating getRating() {
+        return rating;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
+    }
+
+    @Embeddable
+    public static class Rating {
+        private Double rate;
+        private Integer count;
+
+        public Double getRate() {
+            return rate;
+        }
+
+        public void setRate(Double rate) {
+            this.rate = rate;
+        }
+
+        public Integer getCount() {
+            return count;
+        }
+
+        public void setCount(Integer count) {
+            this.count = count;
+        }
+    }
+}
