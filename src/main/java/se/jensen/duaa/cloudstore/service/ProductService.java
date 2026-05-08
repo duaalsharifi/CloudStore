@@ -17,6 +17,7 @@ public class ProductService {
 
 
     private final ProductRepository repository;
+    //“Jag måste hämta produkter från internet → jag behöver RestTemplate.”
     private final RestTemplate restTemplate;
 
     public ProductService(ProductRepository repository) {
