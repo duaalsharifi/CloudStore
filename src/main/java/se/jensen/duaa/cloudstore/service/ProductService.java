@@ -1,23 +1,16 @@
 package se.jensen.duaa.cloudstore.service;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import se.jensen.duaa.cloudstore.model.Product;
 import se.jensen.duaa.cloudstore.repository.ProductRepository;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
 public class ProductService {
 
-
     private final ProductRepository repository;
-    //“Jag måste hämta produkter från internet → jag behöver RestTemplate.”
     private final RestTemplate restTemplate;
 
     public ProductService(ProductRepository repository) {
@@ -26,29 +19,34 @@ public class ProductService {
     }
 
     public List<Product> fetchAndSaveProducts() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("User-Agent", "Mozilla/5.0");
-        headers.set("Accept", "application/json");
-
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-
-        ResponseEntity<Product[]> response = restTemplate.exchange(
+        Product[] products = restTemplate.getForObject(
                 "https://fakestoreapi.com/products",
-                HttpMethod.GET,
-                entity,
                 Product[].class
         );
 
-        Product[] prod = response.getBody();
+        for (Product p : products) {
+            // Hantera rating från API:et (som kommer som nested objekt)
+            if (p.getRate() == null) {
+                p.setRate(0.0);
+            }
+            if (p.getCount() == null) {
+                p.setCount(0);
+            }
 
-        List<Product> products = Arrays.asList(prod);
-        repository.saveAll(products);
+            repository.save(p);
+        }
+
         return repository.findAll();
     }
 
     public List<Product> getAllProducts() {
         return repository.findAll();
+
+    }
+
+    public Product getProductById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found: " + id));
     }
 
 }

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f7f7f7;
+            margin: 0;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #222;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: transform .2s, box-shadow .2s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 10px;
+            height: 50px;
+            overflow: hidden;
+        }
+
+        .price {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 8px;
+            color: #4a90e2;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Products</h1>
+
+<div class="grid">
+    <a th:each="p : ${products}"
+       th:href="@{'/products/' + ${p.id}}"
+       class="card">
+
+        <img th:src="${p.image}" alt="Product image">
+
+        <div class="title" th:text="${p.title}"></div>
+
+        <div class="price" th:text="${p.price + ' $'}"></div>
+    </a>
+</div>
+
+</body>
+</html>

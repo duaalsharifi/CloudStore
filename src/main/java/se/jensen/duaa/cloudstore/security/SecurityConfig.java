@@ -16,16 +16,16 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/products",
-                                "/products/fetch",
                                 "/login",
-                                "/register"
+                                "/register",
+                                "/products/fetch"
+
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/products", true)
+                        .defaultSuccessUrl("/product", true)
                         .permitAll()
                 )
                 .logout(logout -> logout.permitAll());
