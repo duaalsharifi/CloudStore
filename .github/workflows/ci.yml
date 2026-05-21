@@ -21,10 +21,20 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Maven
-        run: mvn -B package -DskipTests --file pom.xml
+        run: mvn -B package --file pom.xml
 
-
-
+      - name: Run tests
+        run: mvn test
 
       - name: Build Docker image
         run: docker build -t cloudstore-app .
+
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u
+          "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Tag Docker image
+        run: docker tag cloudstore-app ${{ secrets.DOCKER_USERNAME }}/cloudstore-app:latest
+
+      - name: Push Docker image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/cloudstore-app:latest
