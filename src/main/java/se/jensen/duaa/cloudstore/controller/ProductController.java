@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import se.jensen.duaa.cloudstore.model.Product;
 import se.jensen.duaa.cloudstore.service.ProductService;
 
+import java.util.List;
+
 @Controller
 public class ProductController {
 
@@ -16,23 +18,15 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/products/fetch")
-    public String fetchProducts(Model model) {
-        model.addAttribute("products", productService.fetchAndSaveProducts());
-        return "product"; // matchar product.html
-    }
-
-    @GetMapping("/product")
-    public String getAllProducts(Model model) {
-        model.addAttribute("products", productService.getAllProducts());
-        return "product"; // matchar product.html
-    }
-
+    // Hämta produkter från API + spara i DB och visar upp det
     @GetMapping("/products")
-    public String getAllProductsRedirect(Model model) {
-        return "redirect:/product";
+    public String showProducts(Model model) {
+        List<Product> products = productService.fetchAndSaveProducts();
+        model.addAttribute("products", products);
+        return "product"; // product.html
     }
 
+    // Visa detaljer för en produkt
     @GetMapping("/products/{id}")
     public String productDetails(@PathVariable Long id, Model model) {
         Product product = productService.getProductById(id);
@@ -40,12 +34,11 @@ public class ProductController {
         return "product-details";
     }
 
+    // Visa orderbekräftelse
     @GetMapping("/order/{id}")
     public String showOrderConfirmation(@PathVariable Long id, Model model) {
         Product product = productService.getProductById(id);
         model.addAttribute("product", product);
         return "order-confirmation";
     }
-
-
 }
