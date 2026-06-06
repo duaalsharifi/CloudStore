@@ -16,24 +16,33 @@ public class ProductController {
         this.productService = productService;
     }
 
+    // Redirect root URL to fetch products- slippa/gå till rätt sida
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/products/fetch";
+    }
+
+    // Fetch products from API and save to RDS
     @GetMapping("/products/fetch")
     public String fetchProducts(Model model) {
         model.addAttribute("products", productService.fetchAndSaveProducts());
-        return "product"; // matchar product.html
+        return "product"; // product.html
     }
 
+    // Show all products from RDS
     @GetMapping("/product")
     public String getAllProducts(Model model) {
         model.addAttribute("products", productService.getAllProducts());
-        return "product"; // matchar product.html
+        return "product"; // product.html
     }
 
+    // Redirect /products → /product
     @GetMapping("/products")
-    public String getAllProductsRedirect(Model model) {
-
+    public String getAllProductsRedirect() {
         return "redirect:/product";
     }
 
+    // Product details page
     @GetMapping("/products/{id}")
     public String productDetails(@PathVariable Long id, Model model) {
         Product product = productService.getProductById(id);
@@ -41,12 +50,11 @@ public class ProductController {
         return "product-details";
     }
 
+    // Order confirmation page
     @GetMapping("/order/{id}")
     public String showOrderConfirmation(@PathVariable Long id, Model model) {
         Product product = productService.getProductById(id);
         model.addAttribute("product", product);
         return "order-confirmation";
     }
-
-
 }
