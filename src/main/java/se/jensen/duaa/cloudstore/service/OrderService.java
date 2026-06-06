@@ -23,12 +23,14 @@ public class OrderService {
         order.setProductName(product.getTitle());
         order.setPrice(product.getPrice());
         order.setUsername(username);
-
         repo.save(order);
 
     }
 
     public List<Order> getOrdersForUser(String username) {
+
         return repo.findByUsername(username);
     }
+
+
 }

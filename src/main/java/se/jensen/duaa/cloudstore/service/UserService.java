@@ -21,6 +21,7 @@ public class UserService {
         User user = new User();
         user.setUsername(username);
         user.setPassword(encoder.encode(password));
+        user.setRole("USER");
         repo.save(user);
     }
 }
